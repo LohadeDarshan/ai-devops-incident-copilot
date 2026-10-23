@@ -1,0 +1,52 @@
+groups:
+  - name: incident-copilot-alerts
+    rules:
+      - alert: HighCPU
+        expr: |
+          100 * (
+            1 - avg by (instance) (
+              rate(node_cpu_seconds_total{mode="idle"}[2m])
+            )
+          ) > 80
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "CPU usage above 80% on {{ $labels.instance }}"
+          description: "CPU usage remained high for one minute."
+
+      - alert: HighMemory
+        expr: |
+          100 * (
+            1 - node_memory_MemAvailable_bytes
+            / node_memory_MemTotal_bytes
+          ) > 90
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Memory usage above 90% on {{ $labels.instance }}"
+
+      - alert: DiskAlmostFull
+        expr: |
+          100 * (
+            1 - node_filesystem_avail_bytes{
+              fstype!~"tmpfs|overlay|squashfs|ramfs"
+            }
+            / node_filesystem_size_bytes{
+              fstype!~"tmpfs|overlay|squashfs|ramfs"
+            }
+          ) > 85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Disk usage above 85% on {{ $labels.instance }}"
+
+      - alert: NodeExporterDown
+        expr: up{job="node"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Node exporter is down on {{ $labels.instance }}"
