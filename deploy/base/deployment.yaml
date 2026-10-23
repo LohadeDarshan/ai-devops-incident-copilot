@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: copilot
-          image: ghcr.io/LohadeDarshan/ai-devops-incident-copilot:bootstrap
+          image: ghcr.io/lohadedarshan/ai-devops-incident-copilot:61e5dcf06b45ba189f5d4e102e79b3fca72c0e2a
           imagePullPolicy: IfNotPresent
 
           ports:
