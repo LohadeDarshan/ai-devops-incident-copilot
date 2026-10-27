@@ -6,3 +6,17 @@ __pycache__/
 data/
 incidents.jsonl
 .pytest_cache/
+# Local incident data and backups
+backups/
+*.jsonl
+*.backup
+*.pyc
+__pycache__/
+
+# Local deployment backups
+*.yaml.bak
+*.yaml.pre-pvc
+
+# Local deployment backups
+*.yaml.bak
+*.yaml.pre-pvc

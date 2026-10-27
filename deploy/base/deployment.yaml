@@ -5,65 +5,55 @@ metadata:
   namespace: incident-copilot
 spec:
   replicas: 1
-
   selector:
     matchLabels:
       app: incident-copilot
-
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
         app: incident-copilot
-
     spec:
       containers:
         - name: copilot
-          image: ghcr.io/lohadedarshan/ai-devops-incident-copilot:61e5dcf06b45ba189f5d4e102e79b3fca72c0e2a
-          imagePullPolicy: IfNotPresent
-
+          image: myserverd/ai-devops-incident-copilot:latest
+          imagePullPolicy: Always
           ports:
             - name: http
               containerPort: 8000
-
           env:
             - name: PROM_URL
-              value: "http://YOUR_PROMETHEUS_SERVER_IP:9090"
-
+              value: "http://prometheus.monitoring.svc.cluster.local:9090"
             - name: OLLAMA_URL
-              value: "http://YOUR_OLLAMA_SERVER_IP:11434"
-
+              value: "http://192.168.160.10:11434"
             - name: MODEL
-              value: "qwen2.5:1.5b"
-
+              value: "qwen2.5:0.5b"
             - name: INCIDENT_FILE
               value: "/data/incidents.jsonl"
-
           resources:
             requests:
               cpu: 100m
-              memory: 256Mi
+              memory: 128Mi
             limits:
-              cpu: "1"
-              memory: 512Mi
-
+              cpu: 500m
+              memory: 384Mi
           readinessProbe:
             httpGet:
               path: /health
               port: http
             initialDelaySeconds: 5
             periodSeconds: 10
-
           livenessProbe:
             httpGet:
               path: /health
               port: http
             initialDelaySeconds: 15
             periodSeconds: 20
-
           volumeMounts:
             - name: incident-data
               mountPath: /data
-
       volumes:
         - name: incident-data
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: incident-copilot-data
