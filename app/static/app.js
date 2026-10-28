@@ -1,5 +1,6 @@
 let incidents = [];
 let selectedIndex = null;
+let selectedTimestamp = null;
 
 const el = id => document.getElementById(id);
 
@@ -29,6 +30,7 @@ function showDetails(index) {
   if (!record) return;
 
   selectedIndex = index;
+  selectedTimestamp = record.timestamp;
   const labels = labelsOf(record);
 
   el("detail-placeholder").hidden = true;
@@ -39,6 +41,7 @@ function showDetails(index) {
   el("detail-analysis").textContent = analysisOf(record);
   el("detail-evidence").textContent = evidenceOf(record);
 
+  loadDiagnostics(record.timestamp);
   renderRows();
 }
 
@@ -111,8 +114,13 @@ async function loadIncidents() {
     el("error").hidden = true;
     renderRows();
 
-    if (selectedIndex !== null && incidents[selectedIndex]) {
-      showDetails(selectedIndex);
+    if (selectedTimestamp !== null) {
+      const index = incidents.findIndex(
+        record => record.timestamp === selectedTimestamp
+      );
+      if (index !== -1) {
+        showDetails(index);
+      }
     }
   } catch (error) {
     el("error").textContent = `Unable to load incidents: ${error.message}`;
@@ -123,3 +131,62 @@ async function loadIncidents() {
 el("search").addEventListener("input", renderRows);
 loadIncidents();
 setInterval(loadIncidents, 15000);
+
+async function loadDiagnostics(timestamp) {
+  const container = el("diagnostic-commands");
+  if (!container) return;
+
+  container.textContent = "Loading diagnostic commands...";
+
+  try {
+    const response = await fetch("/diagnostics?n=100", {
+      cache: "no-store"
+    });
+
+    if (!response.ok) {
+      throw new Error(`API returned ${response.status}`);
+    }
+
+    const records = await response.json();
+    const incident = records.find(
+      record => record.timestamp === timestamp
+    );
+
+    container.replaceChildren();
+
+    if (!incident || !incident.commands?.length) {
+      container.textContent = "No diagnostic commands available.";
+      return;
+    }
+
+    for (const item of incident.commands) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "diagnostic-item";
+
+      const code = document.createElement("pre");
+      code.textContent = item.command;
+
+      const purpose = document.createElement("p");
+      purpose.className = "muted";
+      purpose.textContent = item.purpose;
+
+      const copy = document.createElement("button");
+      copy.textContent = "Copy command";
+
+      copy.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(item.command);
+          copy.textContent = "Copied!";
+        } catch {
+          copy.textContent = "Select command to copy";
+        }
+      });
+
+      wrapper.append(code, purpose, copy);
+      container.append(wrapper);
+    }
+  } catch (error) {
+    container.textContent =
+      `Unable to load diagnostics: ${error.message}`;
+  }
+}

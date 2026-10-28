@@ -234,3 +234,29 @@ pre {
 html {
   scroll-behavior: smooth;
 }
+
+.diagnostic-item {
+  background: #101a2d;
+  border: 1px solid #2a3750;
+  border-radius: 10px;
+  padding: 16px;
+  margin: 12px 0;
+}
+
+.diagnostic-item pre {
+  color: #8bd5ff;
+  margin-bottom: 10px;
+}
+
+.diagnostic-item button {
+  background: #2563eb;
+  border: none;
+  color: white;
+  padding: 9px 14px;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.diagnostic-item button:hover {
+  background: #1d4ed8;
+}

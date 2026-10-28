@@ -8,6 +8,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 import requests
+from app.diagnostics import diagnostic_commands
 from fastapi import BackgroundTasks, FastAPI, HTTPException, Request
 
 app = FastAPI(
@@ -444,3 +445,18 @@ def incidents(n: int = 10):
             continue
 
     return records
+
+
+@app.get("/diagnostics")
+def diagnostics(n: int = 10):
+    records = incidents(n=n)
+    return [
+        {
+            "timestamp": record.get("timestamp"),
+            "alert": record.get("alert", {}),
+            "commands": diagnostic_commands(
+                record.get("alert", {})
+            ),
+        }
+        for record in records
+    ]
