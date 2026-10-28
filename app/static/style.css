@@ -220,3 +220,17 @@ pre {
     flex-direction: column;
   }
 }
+
+.nav-item {
+  display: block;
+  text-decoration: none;
+}
+
+.nav-item:hover {
+  background: #263b58;
+  color: #ffffff;
+}
+
+html {
+  scroll-behavior: smooth;
+}

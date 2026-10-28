@@ -4,7 +4,7 @@ let selectedIndex = null;
 const el = id => document.getElementById(id);
 
 function labelsOf(record) {
-  return record.alert?.labels || record.labels || {};
+  return record.alert?.labels || record.alert || record.labels || {};
 }
 
 function analysisOf(record) {
