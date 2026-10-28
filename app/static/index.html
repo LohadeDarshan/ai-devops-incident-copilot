@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI DevOps Incident Copilot</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">⚡ Incident Copilot</div>
+      <div class="nav-item active">▦ Dashboard</div>
+      <div class="nav-item">◉ Incident History</div>
+      <div class="sidebar-footer">Kubernetes · Prometheus · Ollama</div>
+    </aside>
+
+    <main class="main">
+      <header>
+        <div>
+          <p class="eyebrow">OBSERVABILITY / INCIDENT RESPONSE</p>
+          <h1>Incident Dashboard</h1>
+          <p class="muted">AI-assisted Kubernetes and Linux incident investigation</p>
+        </div>
+        <div class="live">● Auto-refresh: 15s</div>
+      </header>
+
+      <section class="stats">
+        <article class="stat"><span>Total Incidents</span><strong id="total">—</strong></article>
+        <article class="stat"><span>AI Completed</span><strong id="completed">—</strong></article>
+        <article class="stat"><span>AI Failed</span><strong id="failed">—</strong></article>
+        <article class="stat"><span>Critical Alerts</span><strong id="critical">—</strong></article>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Incident History</h2>
+            <p class="muted">Most recent 100 saved incident records</p>
+          </div>
+          <input id="search" type="search" placeholder="Search incidents...">
+        </div>
+        <div id="error" class="error" hidden></div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Timestamp</th>
+                <th>Alert</th>
+                <th>Severity</th>
+                <th>Namespace</th>
+                <th>AI Status</th>
+              </tr>
+            </thead>
+            <tbody id="incident-rows">
+              <tr><td colspan="5">Loading incidents...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel details">
+        <h2>Incident Details</h2>
+        <p id="detail-placeholder" class="muted">Select an incident to view its analysis.</p>
+        <div id="detail-content" hidden>
+          <h3 id="detail-title"></h3>
+          <div id="detail-meta" class="muted"></div>
+          <h3>AI Root Cause Analysis</h3>
+          <pre id="detail-analysis"></pre>
+          <h3>Collected Evidence</h3>
+          <pre id="detail-evidence"></pre>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

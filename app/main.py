@@ -4,6 +4,9 @@ import threading
 from datetime import datetime, timezone
 from pathlib import Path
 
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
+
 import requests
 from fastapi import BackgroundTasks, FastAPI, HTTPException, Request
 
@@ -11,6 +14,23 @@ app = FastAPI(
     title="AI DevOps Incident Copilot",
     version="1.1.0",
 )
+
+
+
+# Dashboard static files
+STATIC_DIR = Path(__file__).resolve().parent / "static"
+
+app.mount(
+    "/static",
+    StaticFiles(directory=str(STATIC_DIR)),
+    name="static",
+)
+
+
+@app.get("/dashboard", include_in_schema=False)
+def dashboard():
+    return FileResponse(STATIC_DIR / "index.html")
+
 
 PROM_URL = os.getenv(
     "PROM_URL",
