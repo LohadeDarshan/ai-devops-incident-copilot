@@ -15,6 +15,23 @@ spec:
       labels:
         app: incident-copilot
     spec:
+      initContainers:
+        - name: fix-data-permissions
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              chown 10001:999 /data
+              if [ -f /data/incidents.jsonl ]; then
+                chown 10001:999 /data/incidents.jsonl
+                chmod 664 /data/incidents.jsonl
+              fi
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+            - name: incident-data
+              mountPath: /data
       containers:
         - name: copilot
           image: myserverd/ai-devops-incident-copilot:latest
