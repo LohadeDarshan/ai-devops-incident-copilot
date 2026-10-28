@@ -9,6 +9,7 @@ from fastapi.staticfiles import StaticFiles
 
 import requests
 from app.diagnostics import diagnostic_commands
+from app.evidence_validator import validate_analysis
 from fastapi import BackgroundTasks, FastAPI, HTTPException, Request
 
 app = FastAPI(
@@ -346,6 +347,17 @@ def investigate(alert: dict) -> None:
         # Only one CPU-based Ollama inference at a time.
         with llm_lock:
             rca = ask_llm(prompt)
+
+        validation = validate_analysis(rca, evidence)
+
+        if not validation["passed"]:
+            rca += (
+                "\n\nAI VALIDATION WARNING: "
+                "The analysis mentions failure conditions "
+                "not found in collected evidence: "
+                + ", ".join(validation["unsupported_claims"])
+                + ". Treat these as unverified."
+            )
 
         status = "completed"
 
