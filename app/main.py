@@ -317,6 +317,7 @@ def ask_llm(prompt: str) -> str:
             "options": {
                 "temperature": 0.1,
                 "num_ctx": 4096,
+                "num_predict": 250,
             },
         },
         timeout=300,
