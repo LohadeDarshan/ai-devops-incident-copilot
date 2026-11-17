@@ -5,5 +5,6 @@ namespace: incident-copilot
 
 resources:
   - namespace.yaml
+  - incident-pvc.yaml
   - deployment.yaml
   - service.yaml
