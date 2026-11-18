@@ -1,10 +1,10 @@
 # AI DevOps Incident Copilot
 
-An AI-assisted incident investigation application deployed on a local VMware-based Kubernetes cluster.
+An AI-assisted DevOps incident investigation application deployed on a Kubernetes cluster.
 
 The application receives Prometheus alerts through Alertmanager, collects available Linux and Kubernetes metrics, uses a locally hosted Ollama model to generate an initial incident analysis, and stores incident records for review through a web dashboard.
 
-> **Project scope:** This implementation focuses on alert context and Prometheus metrics. It is not an autonomous remediation system. Loki-based log analysis, distributed tracing, and LangGraph orchestration are not implemented.
+> **Project scope:** This implementation focuses on alert context, infrastructure metrics, and AI-assisted incident triage. It is not an autonomous remediation system. Log analysis using Loki, distributed tracing, and LangGraph orchestration are not implemented.
 
 ## Overview
 
@@ -27,36 +27,40 @@ When an infrastructure alert fires, engineers often need to inspect monitoring t
 
 ![AI DevOps Incident Copilot Architecture](docs/images/ai-devops-incident-copilot-architecture-uploaded.png)
 
-```text
-Linux Nodes
-    |
-node_exporter
-    |
-    v
-Prometheus <----- kube-state-metrics
-    |
-Alert Rules
-    |
-    v
-Alertmanager
-    |
-HTTP Webhook
-    |
-    v
-FastAPI Incident Copilot
-    |
-    +------> Prometheus API
-    |         Evidence Collection
-    |
-    +------> Ollama
-    |         Local AI Analysis
-    |
-    +------> PVC
-    |         Incident Persistence
-    |
-    v
-Incident Dashboard
-```
+Linux Nodes + Kubernetes Metrics
+              |
+              v
+          Prometheus
+       (Metrics + Alerts)
+              |
+              v
+         Alertmanager
+              |
+         HTTP Webhook
+              |
+              v
+       FastAPI Incident Copilot
+              |
+       Evidence Collection
+              |
+       +------+------+
+       |             |
+       v             v
+  Prometheus API   Ollama LLM
+  Metrics Data     Qwen 2.5 0.5B
+       |             |
+       +------+------+
+              |
+              v
+     AI Incident Analysis
+              |
+       +------+------+
+       |             |
+       v             v
+  Kubernetes PVC  Web Dashboard
+  Incident History Incident Review
+
+Grafana: Monitoring Dashboard
 
 ## Project Screenshots
 
