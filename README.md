@@ -1,4 +1,3 @@
-
 # AI DevOps Incident Copilot
 
 An AI-assisted incident investigation application deployed on a local VMware-based Kubernetes cluster.
@@ -25,6 +24,8 @@ When an infrastructure alert fires, engineers often need to inspect monitoring t
 - Build and publish Docker images using GitHub Actions.
 
 ## Architecture
+
+![AI DevOps Incident Copilot Architecture](docs/images/ai-devops-incident-copilot-architecture-uploaded.png)
 
 ```text
 Linux Nodes
@@ -56,6 +57,28 @@ FastAPI Incident Copilot
     v
 Incident Dashboard
 ```
+
+## Project Screenshots
+
+### 1. Incident Copilot Dashboard
+
+![Incident Dashboard](docs/images/incident-dashboard.png)
+
+### 2. AI Incident Analysis
+
+![AI Incident Analysis](docs/images/incident-analysis.png)
+
+### 3. Grafana Monitoring Dashboard
+
+![Grafana Dashboard](docs/images/grafana-dashboard.png)
+
+### 4. Swagger API Documentation
+
+![Swagger API](docs/images/swagger-api.png)
+
+### 5. Prometheus Monitoring Targets
+
+![Prometheus Targets](docs/images/prometheus-targets.png)
 
 ## Incident Processing Workflow
 
@@ -92,23 +115,41 @@ Incident Dashboard
 ## Repository Structure
 
 ```text
-.
+ai-devops-incident-copilot/
+│
+├── .github/
+│   └── workflows/
+│       └── build.yml
+│
 ├── app/
 │   ├── main.py
 │   ├── evidence_validator.py
 │   ├── diagnostics.py
 │   └── static/
+│
 ├── deploy/
 │   └── base/
+│
+├── docs/
+│   └── images/
+│       ├── ai-devops-incident-copilot-architecture-uploaded.png
+│       ├── incident-dashboard.png
+│       ├── incident-analysis.png
+│       ├── grafana-dashboard.png
+│       ├── swagger-api.png
+│       └── prometheus-targets.png
+│
 ├── monitoring/
 │   ├── alertmanager.yml
 │   └── prometheus-rules.yml
+│
 ├── tests/
+│
+├── .dockerignore
+├── .gitignore
 ├── Dockerfile
-├── requirements.txt
-└── .github/
-    └── workflows/
-        └── build.yml
+├── README.md
+└── requirements.txt
 ```
 
 ## Lab Environment
